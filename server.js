@@ -55,6 +55,17 @@ app.get('/api/jatekok/kereses', async (req, res) => {
   }
 });
 
+app.get('/api/statisztika', async (req, res) => {
+  try {
+    const [response] = await pool.query('SELECT mufaj, COUNT(*) AS darabszam, ROUND(AVG(ar), 0) AS atlag_ar FROM jatekok GROUP BY mufaj ORDER BY darabszam DESC');
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error });
+  }
+});
+
 app.get('/api/jatekok/:id', async (req, res) => {
   try {
     const { id } = req.params;
